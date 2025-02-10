@@ -1,6 +1,6 @@
 name: Node CI
 
-on: 
+on:
   - push
   - pull_request
 
@@ -9,15 +9,21 @@ env:
 
 jobs:
   build:
+
     runs-on: macos-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: make install
       - run: make lint
       - run: make test
-      - name: Print Hello from Hexlet
-        uses: hexlet-components/hello-from-hexlet-action@release
+      - uses: hexlet-components/hello-from-hexlet-action@release
